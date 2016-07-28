@@ -86,6 +86,36 @@ define([
             expect($('.enrollment-change-errors').css('display')).toEqual('none');
         });
 
+        it('upon submit an enrollment change request and certificate is regenerated.', function() {
+            var requests = AjaxHelpers.requests(this);
+            $('.enrollment-new-mode').val('verified');
+            $('.enrollment-reason').val('Financial Assistance');
+            $('.enrollment-change-submit').click();
+
+            // Expect update user enrollment from audit to verified.
+            AjaxHelpers.expectJsonRequest(requests, 'POST', '/support/enrollment/test-user', {
+                course_id: EnrollmentHelpers.TEST_COURSE,
+                new_mode: 'verified',
+                old_mode: 'audit',
+                reason: 'Financial Assistance'
+            });
+            AjaxHelpers.respondWithJson(requests, {
+                enrolled_by: 'staff@edx.org',
+                reason: 'Financial Assistance'
+            });
+
+            // Expect a regenerate certificate request to the server.
+            AjaxHelpers.expectPostRequest(
+                requests,
+                '/certificates/regenerate',
+                $.param({
+                    username: 'test-user',
+                    course_key: EnrollmentHelpers.TEST_COURSE
+                })
+            );
+            AjaxHelpers.respond(requests, {});
+        });
+
         it('shows a message on a server error', function() {
             var requests = AjaxHelpers.requests(this);
             $('.enrollment-new-mode').val('verified');
