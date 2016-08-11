@@ -102,30 +102,30 @@ describe 'Problem', ->
 
     describe 'with a status of "none"', ->
       it 'reports the number of points possible and graded', ->
-        testProgessData(@problem, 'none', '0/1', "True", "1 point possible; graded")
+        testProgessData(@problem, 'none', '0/1', "True", "1 point possible (graded)")
 
       it 'displays the number of points possible when rendering happens with the content', ->
-        testProgessData(@problem, 'none', '0/2', "True", "2 points possible; graded")
+        testProgessData(@problem, 'none', '0/2', "True", "2 points possible (graded)")
 
       it 'reports the number of points possible and ungraded', ->
-        testProgessData(@problem, 'none', '0/1', "False", "1 point possible; ungraded")
+        testProgessData(@problem, 'none', '0/1', "False", "1 point possible (ungraded)")
 
       it 'displays ungraded if number of points possible is 0', ->
-        testProgessData(@problem, 'none', '0', "False", "0 points possible; ungraded")
+        testProgessData(@problem, 'none', '0', "False", "0 points possible (ungraded)")
 
       it 'displays ungraded if number of points possible is 0, even if graded value is True', ->
-        testProgessData(@problem, 'none', '0', "True", "0 points possible; ungraded")
+        testProgessData(@problem, 'none', '0', "True", "0 points possible (ungraded)")
 
     describe 'with any other valid status', ->
 
       it 'reports the current score', ->
-        testProgessData(@problem, 'foo', '1/1', "True", "1/1 point earned; graded")
+        testProgessData(@problem, 'foo', '1/1', "True", "1/1 point earned (graded)")
 
       it 'shows current score when rendering happens with the content', ->
-        testProgessData(@problem, 'test status', '2/2', "True", "2/2 points earned; graded")
+        testProgessData(@problem, 'test status', '2/2', "True", "2/2 points earned (graded)")
 
       it 'reports the current score even if problem is ungraded', ->
-        testProgessData(@problem, 'test status', '1/1', "False", "1/1 point earned; ungraded")
+        testProgessData(@problem, 'test status', '1/1', "False", "1/1 point earned (ungraded)")
 
     describe 'with valid status and string containing an integer like "0" for detail', ->
       # These tests are to address a failure specific to Chrome 51 and 52 +
