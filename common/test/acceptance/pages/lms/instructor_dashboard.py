@@ -626,7 +626,7 @@ class CohortManagementSection(PageObject):
         Shows the discussion topics.
         """
         self.q(css=self._bounded_selector(".toggle-cohort-management-discussions")).first.click()
-        self.wait_for_element_visibility("#cohort-management-discussion-topics", "Waiting for discussions to appear")
+        self.wait_for_element_visibility("#cohort-discussions-management", "Waiting for discussions to appear")
 
     def discussion_topics_visible(self):
         """

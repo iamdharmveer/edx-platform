@@ -304,7 +304,7 @@
                                 });
                             }
                         }).render();
-                        this.$('#file-upload-form-file').focus();
+                        this.$('#file-upload-form-file');
                     }
                 },
                 showDiscussionTopics: function(event) {
