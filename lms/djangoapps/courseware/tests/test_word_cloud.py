@@ -241,12 +241,11 @@ class TestWordCloud(BaseTestXmodule):
             )
 
     def test_word_cloud_constructor(self):
-        """Make sure that all parameters extracted correclty from xml"""
+        """Make sure that all parameters extracted correctly from xml"""
         fragment = self.runtime.render(self.item_descriptor, STUDENT_VIEW)
-
         expected_context = {
             'ajax_url': self.item_descriptor.xmodule_runtime.ajax_url,
-            'display_name': 'word_cloud ' + self.item_descriptor.location.html_id(),
+            'display_name': self.item_descriptor.display_name,
             'element_class': self.item_descriptor.location.category,
             'element_id': self.item_descriptor.location.html_id(),
             'instructions': 'Replace this text with instructions for your word cloud.',
