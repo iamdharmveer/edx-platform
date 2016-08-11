@@ -113,7 +113,7 @@ class CapaFactory(object):
         )
         if xml is None:
             xml = cls.sample_problem_xml
-        field_data = {'data': xml, 'graded': 'False'}
+        field_data = {'data': xml}
         field_data.update(kwargs)
         descriptor = Mock(weight="1")
         if problem_state is not None:
@@ -139,6 +139,7 @@ class CapaFactory(object):
             else:
                 module.get_score = lambda: {'score': 0, 'total': 1}
 
+        module.graded = 'False'
         return module
 
 
