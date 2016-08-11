@@ -807,7 +807,3 @@ class TestCourseExportImport(LibraryTestCase):
             self.source_course.location,
             dest_course.location
         )
-
-    def test_branch_settings(self):
-        with self.store.branch_setting(branch_setting=ModuleStoreEnum.Branch.published_only):
-            self.assertEquals(self.store.get_branch_setting(), ModuleStoreEnum.Branch.published_only)

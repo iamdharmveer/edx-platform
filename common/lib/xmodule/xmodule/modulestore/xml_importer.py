@@ -753,24 +753,13 @@ def _update_and_import_module(
         # if library exists, update source_library_version and children
         # according to this existing library and library content block.
         if store.get_library(block.source_library_key):
-            update_block_children_on_branch(store, block, user_id, store.get_branch_setting())
+            LibraryToolsService(store).update_children(
+                    block,
+                    user_id,
+                    version=block.source_library_version
+            )
 
     return block
-
-
-def update_block_children_on_branch(store, lc_block, user_id, branch):
-    """
-    Updates library content block's children on draft and published branches.
-    """
-    with store.branch_setting(branch_setting=branch):
-        LibraryToolsService(store).update_children(
-            lc_block,
-            user_id,
-            version=lc_block.source_library_version
-        )
-
-    if branch == ModuleStoreEnum.Branch.published_only:
-        update_block_children_on_branch(store, lc_block, user_id, ModuleStoreEnum.Branch.draft_preferred)
 
 
 def _import_course_draft(
