@@ -648,8 +648,7 @@ from openedx.core.djangolib.markup import HTML, Text
         };
         if($('body').hasClass('rtl')) {
             $(Selectors.new_course_run).addClass('course-run-text-direction placeholder-text-direction');
-            $(Selectors.new_course_run).keyup(function(event) {
-                event.preventDefault();
+            $(Selectors.new_course_run).on('input', function() {
                 if (this.value == '') {
                     $(Selectors.new_course_run).addClass('placeholder-text-direction');
                 }
