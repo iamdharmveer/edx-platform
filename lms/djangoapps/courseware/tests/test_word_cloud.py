@@ -246,6 +246,7 @@ class TestWordCloud(BaseTestXmodule):
         expected_context = {
             'ajax_url': self.item_descriptor.xmodule_runtime.ajax_url,
             'display_name': self.item_descriptor.display_name,
+            'display_name_default': 'Word cloud',
             'element_class': self.item_descriptor.location.category,
             'element_id': self.item_descriptor.location.html_id(),
             'instructions': 'Replace this text with instructions for your word cloud.',

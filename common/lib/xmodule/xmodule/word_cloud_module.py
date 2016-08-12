@@ -248,7 +248,8 @@ class WordCloudModule(WordCloudFields, XModule):
             'submitted': self.submitted,
             'instructions_default': WordCloudFields.instructions.default,
             'instructions': self.instructions,
-            'display_name': self.display_name
+            'display_name': self.display_name,
+            'display_name_default': WordCloudFields.display_name.default
         }
         self.content = self.system.render_template('word_cloud.html', context)
         return self.content

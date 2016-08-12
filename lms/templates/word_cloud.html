@@ -6,7 +6,9 @@
     class="${element_class}"
     data-ajax-url="${ajax_url}"
 >
+    % if display_name is not display_name_default:
     <h3 class="hd hd-3">${display_name}</h3>
+    % endif
 
     % if instructions is not instructions_default:
     <div class="input_cloud_instructions" id="word_cloud_${element_id}_instructions">
