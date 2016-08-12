@@ -58,8 +58,8 @@ describe 'Problem', ->
     it 'bind answer refresh on button click', ->
       expect($('div.action button')).toHandleWith 'click', @problem.refreshAnswers
 
-    it 'bind the check button', ->
-      expect($('div.action button.check')).toHandleWith 'click', @problem.check_fd
+    it 'bind the submit button', ->
+      expect($('div.action button.submit')).toHandleWith 'click', @problem.submit_fd
 
     it 'bind the reset button', ->
       expect($('div.action button.reset')).toHandleWith 'click', @problem.reset
@@ -80,8 +80,8 @@ describe 'Problem', ->
       @problem = new Problem($('.xblock-student_view'))
       $(@).html readFixtures('problem_content_1240.html')
 
-    it 'bind the check button', ->
-      expect($('div.action button.check')).toHandleWith 'click', @problem.check_fd
+    it 'bind the submit button', ->
+      expect($('div.action button.submit')).toHandleWith 'click', @problem.submit_fd
 
     it 'bind the show button', ->
       expect($('div.action button.show')).toHandleWith 'click', @problem.show
@@ -147,29 +147,29 @@ describe 'Problem', ->
       it 're-bind the content', ->
         expect(@problem.bind).toHaveBeenCalled()
 
-  describe 'check_fd', ->
+  describe 'submit_fd', ->
     beforeEach ->
       # Insert an input of type file outside of the problem.
       $('.xblock-student_view').after('<input type="file" />')
       @problem = new Problem($('.xblock-student_view'))
-      spyOn(@problem, 'check')
+      spyOn(@problem, 'submit')
 
-    it 'check method is called if input of type file is not in problem', ->
-      @problem.check_fd()
-      expect(@problem.check).toHaveBeenCalled()
+    it 'submit method is called if input of type file is not in problem', ->
+      @problem.submit_fd()
+      expect(@problem.submit).toHaveBeenCalled()
 
-  describe 'check', ->
+  describe 'submit', ->
     beforeEach ->
       @problem = new Problem($('.xblock-student_view'))
       @problem.answers = 'foo=1&bar=2'
 
-    it 'log the problem_check event', ->
+    it 'log the problem_submit event', ->
       spyOn($, 'postWithPrefix').and.callFake (url, answers, callback) ->
         promise =
           always: (callable) -> callable()
           done: (callable) -> callable()
-      @problem.check()
-      expect(Logger.log).toHaveBeenCalledWith 'problem_check', 'foo=1&bar=2'
+      @problem.submit()
+      expect(Logger.log).toHaveBeenCalledWith 'problem_submit', 'foo=1&bar=2'
 
     it 'log the problem_graded event, after the problem is done grading.', ->
       spyOn($, 'postWithPrefix').and.callFake (url, answers, callback) ->
@@ -180,16 +180,16 @@ describe 'Problem', ->
         promise =
           always: (callable) -> callable()
           done: (callable) -> callable()
-      @problem.check()
+      @problem.submit()
       expect(Logger.log).toHaveBeenCalledWith 'problem_graded', ['foo=1&bar=2', 'mock grader response'], @problem.id
 
-    it 'submit the answer for check', ->
+    it 'submit the answer for submit', ->
       spyOn($, 'postWithPrefix').and.callFake (url, answers, callback) ->
         promise =
           always: (callable) -> callable()
           done: (callable) -> callable()
-      @problem.check()
-      expect($.postWithPrefix).toHaveBeenCalledWith '/problem/Problem1/problem_check',
+      @problem.submit()
+      expect($.postWithPrefix).toHaveBeenCalledWith '/problem/Problem1/problem_submit',
           'foo=1&bar=2', jasmine.any(Function)
 
     describe 'when the response is correct', ->
@@ -199,7 +199,7 @@ describe 'Problem', ->
           promise =
             always: (callable) -> callable()
             done: (callable) -> callable()
-        @problem.check()
+        @problem.submit()
         expect(@problem.el.html()).toEqual 'Correct'
         expect(window.SR.readElts).toHaveBeenCalled()
 
@@ -210,11 +210,11 @@ describe 'Problem', ->
           promise =
             always: (callable) -> callable()
             done: (callable) -> callable()
-        @problem.check()
+        @problem.submit()
         expect(@problem.el.html()).toEqual 'Incorrect'
         expect(window.SR.readElts).toHaveBeenCalled()
 
-    it 'tests if all the capa buttons are disabled while checking', (done)->
+    it 'tests if all the capa buttons are disabled while submitting', (done)->
       deferred = $.Deferred()
       self = this
 
@@ -230,7 +230,7 @@ describe 'Problem', ->
             done: (callable) ->
               callable()
         spyOn @problem, 'enableAllButtons'
-        @problem.check()
+        @problem.submit()
         expect(@problem.enableAllButtons).toHaveBeenCalledWith false, true
         if jQuery.active == 0
           deferred.resolve()
@@ -253,31 +253,31 @@ describe 'Problem', ->
               callable()
             done: (callable) ->
               callable()
-        spyOn @problem.checkButtonLabel, 'text'
-        @problem.check()
-        expect(@problem.checkButtonLabel.text).toHaveBeenCalledWith 'Submitting'
+        spyOn @problem.submitButtonLabel, 'text'
+        @problem.submit()
+        expect(@problem.submitButtonLabel.text).toHaveBeenCalledWith 'Submitting'
         if jQuery.active == 0
           deferred.resolve()
         deferred.promise()
 
       runs.call(self).then(->
-        expect(self.problem.checkButtonLabel.text).toHaveBeenCalledWith 'Submit'
+        expect(self.problem.submitButtonLabel.text).toHaveBeenCalledWith 'Submit'
         return
       ).always done
 
-  describe 'check button on problems', ->
+  describe 'submit button on problems', ->
     beforeEach ->
       @problem = new Problem($('.xblock-student_view'))
-      @checkDisabled = (v) -> expect(@problem.checkButton.hasClass('is-disabled')).toBe(v)
+      @submitDisabled = (v) -> expect(@problem.submitButton.hasClass('is-disabled')).toBe(v)
 
-    describe 'some basic tests for check button', ->
+    describe 'some basic tests for submit button', ->
       it 'should become enabled after a value is entered into the text box', ->
         $('#input_example_1').val('test').trigger('input')
-        @checkDisabled false
+        @submitDisabled false
         $('#input_example_1').val('').trigger('input')
-        @checkDisabled true
+        @submitDisabled true
 
-    describe 'some advanced tests for check button', ->
+    describe 'some advanced tests for submit button', ->
       it 'should become enabled after a checkbox is checked', ->
         html = '''
         <div class="choicegroup">
@@ -287,12 +287,12 @@ describe 'Problem', ->
         </div>
         '''
         $('#input_example_1').replaceWith(html)
-        @problem.checkAnswersAndCheckButton true
-        @checkDisabled true
+        @problem.submitAnswersAndSubmitButton true
+        @submitDisabled true
         $('#input_1_1_1').click()
-        @checkDisabled false
+        @submitDisabled false
         $('#input_1_1_1').click()
-        @checkDisabled true
+        @submitDisabled true
 
       it 'should become enabled after a radiobutton is checked', ->
         html = '''
@@ -303,12 +303,12 @@ describe 'Problem', ->
         </div>
         '''
         $('#input_example_1').replaceWith(html)
-        @problem.checkAnswersAndCheckButton true
-        @checkDisabled true
+        @problem.submitAnswersAndSubmitButton true
+        @submitDisabled true
         $('#input_1_1_1').attr('checked', true).trigger('click')
-        @checkDisabled false
+        @submitDisabled false
         $('#input_1_1_1').attr('checked', false).trigger('click')
-        @checkDisabled true
+        @submitDisabled true
 
       it 'should become enabled after a value is selected in a selector', ->
         html = '''
@@ -321,12 +321,12 @@ describe 'Problem', ->
         </div>
         '''
         $('#input_example_1').replaceWith(html)
-        @problem.checkAnswersAndCheckButton true
-        @checkDisabled true
+        @problem.submitAnswersAndSubmitButton true
+        @submitDisabled true
         $("#problem_sel select").val("val2").trigger('change')
-        @checkDisabled false
+        @submitDisabled false
         $("#problem_sel select").val("val0").trigger('change')
-        @checkDisabled true
+        @submitDisabled true
 
       it 'should become enabled after a radiobutton is checked and a value is entered into the text box', ->
         html = '''
@@ -337,22 +337,22 @@ describe 'Problem', ->
         </div>
         '''
         $(html).insertAfter('#input_example_1')
-        @problem.checkAnswersAndCheckButton true
-        @checkDisabled true
+        @problem.submitAnswersAndSubmitButton true
+        @submitDisabled true
         $('#input_1_1_1').attr('checked', true).trigger('click')
-        @checkDisabled true
+        @submitDisabled true
         $('#input_example_1').val('111').trigger('input')
-        @checkDisabled false
+        @submitDisabled false
         $('#input_1_1_1').attr('checked', false).trigger('click')
-        @checkDisabled true
+        @submitDisabled true
 
       it 'should become enabled if there are only hidden input fields', ->
         html = '''
         <input type="text" name="test" id="test" aria-describedby="answer_test" value="" style="display:none;">
         '''
         $('#input_example_1').replaceWith(html)
-        @problem.checkAnswersAndCheckButton true
-        @checkDisabled false
+        @problem.submitAnswersAndSubmitButton true
+        @submitDisabled false
 
   describe 'reset', ->
     beforeEach ->
@@ -382,7 +382,7 @@ describe 'Problem', ->
       @problem.reset()
       expect(@problem.el.html()).toEqual 'Reset'
 
-    it 'tests if all the buttons are disabled and the text of check button remains same while resetting', (done) ->
+    it 'tests if all the buttons are disabled and the text of submit button remains same while resetting', (done) ->
       deferred = $.Deferred()
       self = this
 
@@ -394,14 +394,14 @@ describe 'Problem', ->
         spyOn @problem, 'enableAllButtons'
         @problem.reset()
         expect(@problem.enableAllButtons).toHaveBeenCalledWith false, false
-        expect(@problem.checkButtonLabel).toHaveText 'Submit'
+        expect(@problem.submitButtonLabel).toHaveText 'Submit'
         if jQuery.active == 0
           deferred.resolve()
         deferred.promise()
 
       runs.call(self).then(->
         expect(self.problem.enableAllButtons).toHaveBeenCalledWith true, false
-        expect(self.problem.checkButtonLabel).toHaveText 'Submit'
+        expect(self.problem.submitButtonLabel).toHaveText 'Submit'
       ).always done
 
   describe 'show', ->
@@ -754,14 +754,14 @@ describe 'Problem', ->
         spyOn @problem, 'enableAllButtons'
         @problem.save()
         expect(@problem.enableAllButtons).toHaveBeenCalledWith false, false
-        expect(@problem.checkButtonLabel).toHaveText 'Submit'
+        expect(@problem.submitButtonLabel).toHaveText 'Submit'
         if jQuery.active == 0
           deferred.resolve()
         deferred.promise()
 
       runs.call(self).then(->
         expect(self.problem.enableAllButtons).toHaveBeenCalledWith true, false
-        expect(self.problem.checkButtonLabel).toHaveText 'Submit'
+        expect(self.problem.submitButtonLabel).toHaveText 'Submit'
       ).always done
 
   describe 'refreshMath', ->
@@ -825,9 +825,9 @@ describe 'Problem', ->
       @problem = new Problem($('.xblock-student_view'))
       @problem.render(jsinput_html)
 
-    it 'check_save_waitfor should return false', ->
+    it 'submit_save_waitfor should return false', ->
       $(@problem.inputs[0]).data('waitfor', ->)
-      expect(@problem.check_save_waitfor()).toEqual(false)
+      expect(@problem.submit_save_waitfor()).toEqual(false)
 
   describe 'Submitting an xqueue-graded problem', ->
     matlabinput_html = readFixtures('matlabinput_problem.html')
