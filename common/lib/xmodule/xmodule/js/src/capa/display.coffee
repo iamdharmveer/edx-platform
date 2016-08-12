@@ -45,9 +45,6 @@ class @Problem
     @saveButton = @$('div.action button.save')
     @saveButton.click @save
 
-    @showButton.on('focus mouseover', @displayShowAnswerTooltip)
-    @showButton.on('blur mouseout', @hideShowAnswerTooltip)
-
     # Accessibility helper for sighted keyboard users to show <clarification> tooltips on focus:
     @$('.clarification').focus (ev) =>
       icon = $(ev.target).children "i"
@@ -405,6 +402,7 @@ class @Problem
             MathJax.Hub.Queue ["Typeset", MathJax.Hub, element]
 
         @el.addClass 'showed'
+        @el.find('.show').attr('disabled', 'disabled')
         @scroll_to_problem_meta()
         @updateProgress response
         window.SR.readElts(answer_text)
@@ -416,12 +414,6 @@ class @Problem
     @el.find('.action').after(alert_elem)
     @el.find('.capa_alert').css(opacity: 0).animate(opacity: 1, 700)
     window.SR.readElts @el.find('.capa_alert')
-
-  displayShowAnswerTooltip: =>
-    @el.find('.show-answer-tooltip').removeClass 'sr'
-
-  hideShowAnswerTooltip: =>
-    @el.find('.show-answer-tooltip').addClass 'sr'
 
   save: =>
     if not @check_save_waitfor(@save_internal)
