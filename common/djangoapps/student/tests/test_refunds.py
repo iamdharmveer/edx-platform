@@ -188,7 +188,7 @@ class RefundableTest(SharedModuleStoreTestCase):
         )
 
         # creating multiple attributes for same order.
-        for attribute_count in range(0, 2):
+        for attribute_count in range(2):  # pylint: disable=unused-variable
             self.enrollment.attributes.add(CourseEnrollmentAttribute(
                 enrollment=self.enrollment,
                 namespace='order',
@@ -199,4 +199,3 @@ class RefundableTest(SharedModuleStoreTestCase):
         self.client.login(username="jack", password="test")
         resp = self.client.post(reverse('student.views.dashboard', args=[]))
         self.assertEqual(resp.status_code, 200)
-

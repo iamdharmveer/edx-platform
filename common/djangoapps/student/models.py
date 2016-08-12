@@ -1504,7 +1504,8 @@ class CourseEnrollment(models.Model):
         except ObjectDoesNotExist:
             return None
         except MultipleObjectsReturned:
-            # if there are multiple attributes then return the last one.
+            # If there are multiple attributes then return the last one.
+            log.exception("MultipleObjectsReturned Exception")
             attribute = self.attributes.filter(namespace='order', name='order_number').last()
 
         order_number = attribute.value
