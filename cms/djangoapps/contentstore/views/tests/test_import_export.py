@@ -753,8 +753,8 @@ class TestCourseExportImport(LibraryTestCase):
         """
         if block_location.block_type == 'library_content':
             return self.store.get_item(block_location).children
-        else:
-            return self.get_lib_content_block_children(self.store.get_item(block_location).children[0])
+
+        return self.get_lib_content_block_children(self.store.get_item(block_location).children[0])
 
     def assert_problem_display_names(self, source_course_location, dest_course_location):
         """
@@ -773,7 +773,7 @@ class TestCourseExportImport(LibraryTestCase):
     @ddt.data(True, False)
     def test_library_content_on_course_export_import(self, publish_item):
         """
-        Asserts library content in destination and source courses after importing
+        Verify that library contents in destination and source courses are same after importing
         the source course into destination course.
         """
         self._setup_source_course_with_library_content(publish=publish_item)

@@ -754,9 +754,9 @@ def _update_and_import_module(
         # according to this existing library and library content block.
         if store.get_library(block.source_library_key):
             LibraryToolsService(store).update_children(
-                    block,
-                    user_id,
-                    version=block.source_library_version
+                block,
+                user_id,
+                version=block.source_library_version
             )
 
     return block
