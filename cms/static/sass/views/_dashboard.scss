@@ -673,16 +673,16 @@
 
     .new-course-org,
     .new-course-number,
-    .new-course-name {
-      width: 100%;
-    }
+    .new-course-name,
     .new-course-run {
       width: 100%;
+    }
+    .course-run-text-direction {
       direction: ltr;
       text-align: right;
     }
 
-    .input-placeholder {
+    .placeholder-text-direction {
         direction: rtl;
       }
 
