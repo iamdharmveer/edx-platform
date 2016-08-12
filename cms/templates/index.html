@@ -16,6 +16,10 @@ from openedx.core.djangolib.markup import HTML, Text
       IndexFactory();
   });
 </%block>
+<%namespace name='static' file='static_content.html'/>
+<%block name="header_extras">
+    <script src="${static.url("js/vendor/jquery-3.1.0.min.js")}"></script>
+</%block>
 
 <%block name="content">
 <div class="wrapper-mast wrapper">
@@ -108,7 +112,7 @@ from openedx.core.djangolib.markup import HTML, Text
                   <label for="new-course-run">${_("Course Run")}</label>
                   ## Translators: This is an example for the "run" used to identify different
                   ## instances of a course, seen when filling out the form to create a new course.
-                  <input onkeyup="textDirection(this);" class="new-course-run input-placeholder" id="new-course-run" type="text" name="new-course-run" required placeholder="${_('e.g. 2014_T1')}" aria-describedby="tip-new-course-run tip-error-new-course-run" />
+                  <input class="new-course-run" id="new-course-run" type="text" name="new-course-run" required placeholder="${_('e.g. 2014_T1')}" aria-describedby="tip-new-course-run tip-error-new-course-run" />
                   <span class="tip" id="tip-new-course-run">${Text(_("The term in which your course will run. {strong_start}Note: This is part of your course URL, so no spaces or special characters are allowed and it cannot be changed.{strong_end}")).format(
                       strong_start=HTML('<strong>'),
                       strong_end=HTML('</strong>'),
@@ -637,13 +641,22 @@ from openedx.core.djangolib.markup import HTML, Text
 
   %endif
 </div>
-<script type="text/javascript">
-     function textDirection(element) {
-         if (element.value == '' && !element.classList.contains('input-placeholder')) {
-             element.classList.add('input-placeholder');
-         } else if (element.value != ''){
-             element.classList.remove('input-placeholder');
-         }
-     }
- </script>
+<script>
+    $( document ).ready(function() {
+        var Selectors = {
+            new_course_run: '#new-course-run'
+        };
+        if($('body').hasClass('rtl')) {
+            $(Selectors.new_course_run).addClass('course-run-text-direction placeholder-text-direction');
+            $(Selectors.new_course_run).keyup(function(event) {
+                event.preventDefault();
+                if (this.value == '') {
+                    $(Selectors.new_course_run).addClass('placeholder-text-direction');
+                }
+                else {
+                    $(Selectors.new_course_run).removeClass('placeholder-text-direction');
+                }
+            });
+        }});
+</script>
 </%block>
