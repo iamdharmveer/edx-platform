@@ -67,18 +67,6 @@ describe 'Problem', ->
     it 'bind the show button', ->
       expect($('.action .show')).toHandleWith 'click', @problem.show
 
-    it 'bind the display show answer tooltip on button focus', ->
-      expect($('.action .show')).toHandleWith 'focus', @problem.displayShowAnswerTooltip
-
-    it 'bind the display show answer tooltip on button mouseover', ->
-      expect($('.action .show')).toHandleWith 'mouseover', @problem.displayShowAnswerTooltip
-
-    it 'bind the hide show answer tooltip on button blur', ->
-      expect($('.action .show')).toHandleWith 'blur', @problem.hideShowAnswerTooltip
-
-    it 'bind the hide show answer tooltip on button mouseout', ->
-      expect($('.action .show')).toHandleWith 'mouseout', @problem.hideShowAnswerTooltip
-
     it 'bind the save button', ->
       expect($('div.action button.save')).toHandleWith 'click', @problem.save
 
@@ -424,6 +412,7 @@ describe 'Problem', ->
     describe 'when the answer has not yet shown', ->
       beforeEach ->
         @problem.el.removeClass 'showed'
+        expect(@problem.el.find('.show').attr('disabled')).not.toEqual('disabled')
 
       it 'log the problem_show event', ->
         @problem.show()
@@ -464,6 +453,7 @@ describe 'Problem', ->
         spyOn($, 'postWithPrefix').and.callFake (url, callback) -> callback(answers: {})
         @problem.show()
         expect(@problem.el).toHaveClass 'showed'
+        expect(@problem.el.find('.show').attr('disabled')).toEqual('disabled')
 
       it 'reads the answers', (done) ->
         deferred = $.Deferred()
@@ -696,22 +686,6 @@ describe 'Problem', ->
         '''
         $('#answer_1_1').html('One')
         $('#answer_1_2').html('Two')
-
-  describe 'displayShowAnswerTooltip', ->
-    beforeEach ->
-      @problem = new Problem($('.xblock-student_view'))
-
-    it 'shows the tooltip', ->
-      expect(@problem.$('.show')).toHandle('mouseover');
-      expect(@problem.el.find('.show-answer-tooltip')).not.toHaveClass 'sr'
-
-  describe 'hideShowAnswerTooltip', ->
-    beforeEach ->
-      @problem = new Problem($('.xblock-student_view'))
-
-    it 'hides the tooltip', ->
-      expect(@problem.$('.show')).toHandle('mouseout');
-      expect(@problem.$('.show .sr')).toExist()
 
   describe 'save', ->
     beforeEach ->
